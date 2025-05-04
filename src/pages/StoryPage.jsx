@@ -5,7 +5,7 @@ console.log('All env vars:', import.meta.env);
 const spotifyApi = new SpotifyWebApi();
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const redirectUri = 'http://127.0.0.1:5173/'
+const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI_PROD;
 
 console.log('clientId:', clientId);
 console.log('redirectUri local:', import.meta.env.VITE_SPOTIFY_REDIRECT_URI_LOCAL);
