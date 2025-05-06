@@ -19,8 +19,8 @@ function App() {
         overflow: 'hidden',
         position: 'relative',
       }}>
-        {/* <BackgroundAnimation />
-        <CelebrationEffects /> */}
+          {/* <BackgroundAnimation />
+          <CelebrationEffects /> */}
         <ConfettiHearts />
         {/* Navbar */}
         <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-10 flex justify-center gap-8 py-4">
