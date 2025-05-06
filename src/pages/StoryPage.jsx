@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
+console.log('All env vars:', import.meta.env);
 
 const spotifyApi = new SpotifyWebApi();
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
+const redirectUri = 'http://127.0.0.1:5173/'
+
+console.log('clientId:', clientId);
+console.log('redirectUri local:', import.meta.env.VITE_SPOTIFY_REDIRECT_URI_LOCAL);
+console.log('redirectUri prod:', import.meta.env.VITE_SPOTIFY_REDIRECT_URI_PROD);
+
 const scopes = [
   'user-read-playback-state',
   'user-modify-playback-state',

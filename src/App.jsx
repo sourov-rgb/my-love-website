@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import GalleryPage from "./pages/GalleryPage";
 import StoryPage from "./pages/StoryPage";
@@ -10,17 +10,17 @@ import CelebrationEffects from './components/CelebrationEffects';
 
 function App() {
   return (
-    <Router>
+    <Router > {/* Add basename here */}
       <div className="relative" style={{
-        backgroundImage: 'url("/src/assets/herImage.jpg")',
+        backgroundImage: 'url("/my-love-website/src/assets/gallery/IMG-20250427-WA0008.jpg")', // Update assets paths
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh',
         overflow: 'hidden',
         position: 'relative',
       }}>
-          {/* <BackgroundAnimation />
-          <CelebrationEffects /> */}
+        {/* <BackgroundAnimation />
+        <CelebrationEffects /> */}
         <ConfettiHearts />
         {/* Navbar */}
         <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-10 flex justify-center gap-8 py-4">
