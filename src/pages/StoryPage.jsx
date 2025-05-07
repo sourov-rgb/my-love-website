@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SpotifyWebApi from 'spotify-web-api-js';
-console.log('All env vars:', import.meta.env);
 
 const spotifyApi = new SpotifyWebApi();
 
 const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI_PROD;
-
-console.log('clientId:', clientId);
-console.log('redirectUri local:', import.meta.env.VITE_SPOTIFY_REDIRECT_URI_LOCAL);
-console.log('redirectUri prod:', import.meta.env.VITE_SPOTIFY_REDIRECT_URI_PROD);
 
 const scopes = [
   'user-read-playback-state',
@@ -18,7 +13,7 @@ const scopes = [
 ];
 
 const StoryPage = () => {
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(localStorage.getItem('spotifyToken') || '');
   const [query, setQuery] = useState('');
   const [tracks, setTracks] = useState([]);
 
@@ -26,18 +21,22 @@ const StoryPage = () => {
     const hash = window.location.hash.substring(1)
       .split('&')
       .reduce((initial, item) => {
-        let parts = item.split('=');
+        const parts = item.split('=');
         initial[parts[0]] = decodeURIComponent(parts[1]);
         return initial;
       }, {});
 
     const _token = hash.access_token;
+
     if (_token) {
       setToken(_token);
+      localStorage.setItem('spotifyToken', _token);
       spotifyApi.setAccessToken(_token);
       window.location.hash = '';
+    } else if (token) {
+      spotifyApi.setAccessToken(token);
     }
-  }, []);
+  }, [token]);
 
   const handleSearch = async () => {
     if (!query) return;
@@ -57,7 +56,15 @@ const StoryPage = () => {
     }
   };
 
-  const loginUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scopes.join('%20')}`;
+  const handleLogout = () => {
+    localStorage.removeItem('spotifyToken');
+    setToken('');
+    window.location.reload();
+  };
+
+  const loginUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+    redirectUri
+  )}&response_type=token&scope=${encodeURIComponent(scopes.join(' '))}`;
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -78,6 +85,20 @@ const StoryPage = () => {
         </a>
       ) : (
         <div>
+          <button
+            onClick={handleLogout}
+            style={{
+              marginTop: '10px',
+              padding: '8px 16px',
+              backgroundColor: '#d9534f',
+              color: 'white',
+              border: 'none',
+              borderRadius: '20px',
+            }}
+          >
+            Logout
+          </button>
+
           <div style={{ marginTop: '20px' }}>
             <input
               type="text"
@@ -125,7 +146,12 @@ const StoryPage = () => {
                   <img
                     src={track.album.images[0]?.url}
                     alt={track.name}
-                    style={{ width: '60px', height: '60px', borderRadius: '5px', marginRight: '15px' }}
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '5px',
+                      marginRight: '15px',
+                    }}
                   />
                   <div style={{ flex: 1 }}>
                     <strong>{track.name}</strong> <br />
